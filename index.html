@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Molecule Lab — Molecular Geometry Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">M</span><span>MOLECULE <b>LAB</b><small>3D GEOMETRY SIMULATOR</small></span></a>
+    <div class="top-actions"><span class="live-dot"></span><span>INTERACTIVE LEARNING</span><button id="helpBtn" class="icon-btn" title="Petunjuk">?</button></div>
+  </header>
+
+  <main class="app">
+    <aside class="sidebar">
+      <div class="side-heading"><span>WORKSPACE</span><span class="tiny-tag">VSEPR</span></div>
+      <button class="nav-item active" data-tab="model"><span>◈</span> Model Builder</button>
+      <button class="nav-item" data-tab="periodic"><span>▦</span> Periodic Table</button>
+      <button class="nav-item" data-tab="molecules"><span>⬡</span> Molecule Library</button>
+      <button class="nav-item" data-tab="bonding"><span>⟷</span> Chemical Bonds</button>
+      <button class="nav-item" data-tab="polarity"><span>◉</span> Polarity Lab</button>
+      <button class="nav-item" data-tab="lewis"><span>⠿</span> Struktur Lewis</button>
+      <button class="nav-item" data-tab="aufbau"><span>▤</span> Konfigurasi Aufbau</button>
+      <button class="nav-item" data-tab="ions"><span>⊕</span> Pembentukan Ion</button>
+      <button class="nav-item" data-tab="angles"><span>∠</span> Sudut & Pasangan</button>
+      <button class="nav-item" data-tab="compound"><span>⬡</span> Custom Senyawa</button>
+      <button class="nav-item" data-tab="quiz"><span>✧</span> Kuis <small class="soon-mini">SEGERA</small></button>
+      <div class="side-divider"></div>
+      <div class="side-label">QUICK PRESETS</div>
+      <button class="preset-link" data-preset="linear"><i class="preset-dot cyan"></i> Linear</button>
+      <button class="preset-link" data-preset="trigonal-planar"><i class="preset-dot violet"></i> Trigonal planar</button>
+      <button class="preset-link" data-preset="tetrahedral"><i class="preset-dot orange"></i> Tetrahedral</button>
+      <button class="preset-link" data-preset="trigonal-pyramidal"><i class="preset-dot pink"></i> Trigonal pyramidal</button>
+      <button class="preset-link" data-preset="bent"><i class="preset-dot green"></i> Bent</button>
+      <div class="sidebar-note"><span>✦</span><p><b>Did you know?</b><br>Electron groups repel each other and arrange themselves as far apart as possible.</p></div>
+      <div class="side-footer">MOLECULE LAB <span>v1.0</span></div>
+    </aside>
+
+    <section class="workspace">
+      <div class="page-head">
+        <div><div class="eyebrow">SIMULATION / <span id="crumb">MODEL BUILDER</span></div><h1 id="pageTitle">Molecular geometry</h1><p id="pageSubtitle">Build a molecule and explore its three-dimensional shape.</p></div>
+        <button id="resetBtn" class="btn btn-quiet">↺ <span>Reset view</span></button>
+      </div>
+
+      <section id="modelTab" class="tab-panel">
+        <div class="main-grid">
+          <div class="stage-card">
+            <div class="stage-toolbar"><div><span class="status-dot"></span><b>3D MOLECULE VIEW</b><span class="toolbar-muted">Drag to rotate</span></div><div class="view-tools"><button id="labelsBtn" class="tool-btn active">Labels</button><button id="pairsBtn" class="tool-btn active">Lone pairs</button><button id="angleBtn" class="tool-btn active">Angles</button></div></div>
+            <div class="stage-wrap"><canvas id="moleculeCanvas" aria-label="Visualisasi molekul interaktif"></canvas><div class="stage-hint" id="stageHint">DRAG TO ROTATE <span>•</span> SCROLL TO ZOOM</div><div class="stage-badge" id="modelBadge">AX₄ · TETRAHEDRAL</div></div>
+            <div class="stage-bottom"><div class="legend"><span><i class="legend-sphere central"></i> Central atom</span><span><i class="legend-sphere bonded"></i> Bonded atom</span><span><i class="legend-pair"></i> Lone pair</span></div><button id="centerBtn" class="btn btn-small">◎ Center model</button></div>
+          </div>
+
+          <aside class="controls-card">
+            <div class="panel-title"><div><span class="eyebrow">CUSTOMIZE</span><h2>Model controls</h2></div><span class="edit-icon">✎</span></div>
+            <div class="control-group"><label for="centralAtom">CENTRAL ATOM</label><div class="select-wrap"><select id="centralAtom"><option value="C">Carbon (C)</option><option value="N">Nitrogen (N)</option><option value="O">Oxygen (O)</option><option value="S">Sulfur (S)</option><option value="P">Phosphorus (P)</option><option value="Xe">Xenon (Xe)</option></select></div></div>
+            <div class="control-group"><label for="bondedAtom">BONDED ATOM TYPE</label><div class="select-wrap"><select id="bondedAtom"><option value="F">Fluorine (F)</option><option value="H">Hydrogen (H)</option><option value="Cl">Chlorine (Cl)</option><option value="O">Oxygen (O)</option><option value="N">Nitrogen (N)</option><option value="C">Carbon (C)</option><option value="S">Sulfur (S)</option></select></div></div>
+            <div class="control-group"><div class="label-row"><label>BONDED ATOMS</label><strong id="bondCount">4</strong></div><div class="stepper"><button id="bondMinus" aria-label="Kurangi ikatan">−</button><div><b id="bondValue">4</b><small>bonding groups</small></div><button id="bondPlus" aria-label="Tambah ikatan">+</button></div></div>
+            <div class="control-group"><div class="label-row"><label>LONE PAIRS</label><strong id="loneCount">0</strong></div><div class="stepper"><button id="loneMinus" aria-label="Kurangi pasangan bebas">−</button><div><b id="loneValue">0</b><small>non-bonding groups</small></div><button id="lonePlus" aria-label="Tambah pasangan bebas">+</button></div></div>
+            <div class="control-group"><label>DISPLAY STYLE</label><div class="segmented"><button class="active" data-style="ball">Ball & stick</button><button data-style="space">Space filling</button></div></div>
+            <div class="control-group"><label>GEOMETRY PRESET</label><div class="select-wrap"><select id="presetSelect"><option value="custom">Custom arrangement</option><option value="linear">Linear</option><option value="trigonal-planar">Trigonal planar</option><option value="tetrahedral">Tetrahedral</option><option value="trigonal-pyramidal">Trigonal pyramidal</option><option value="bent">Bent</option><option value="trigonal-bipyramidal">Trigonal bipyramidal</option><option value="octahedral">Octahedral</option></select></div></div>
+            <div class="control-tip"><span>ⓘ</span><p>Adjust the bonding groups and lone pairs to see how electron repulsion changes the molecular geometry.</p></div>
+          </aside>
+        </div>
+
+        <div class="info-grid">
+          <article class="info-card geometry-card"><div class="info-head"><span class="eyebrow">MOLECULAR ANALYSIS</span><span class="analysis-chip">LIVE ANALYSIS</span></div><div class="geometry-result"><div><span class="result-label">MOLECULAR GEOMETRY</span><h2 id="geometryName">Tetrahedral</h2><p id="geometryDesc">Four bonding groups arrange symmetrically around the central atom.</p></div><div class="geometry-icon" id="geometryIcon">◇</div></div><div class="metrics"><div><span>ELECTRON GROUPS</span><b id="electronGroups">4</b></div><div><span>ELECTRON GEOMETRY</span><b id="electronGeometry">Tetrahedral</b></div><div><span>IDEAL BOND ANGLE</span><b id="bondAngle">109.5°</b></div></div></article>
+          <article class="info-card"><div class="info-head"><span class="eyebrow">VSEPR THEORY</span><span class="theory-icon">✦</span></div><h3>Why this shape?</h3><p id="theoryText">The four electron groups repel each other equally, creating a tetrahedral arrangement that keeps them as far apart as possible.</p><div class="theory-foot">VALENCE SHELL ELECTRON PAIR REPULSION</div></article>
+        </div>
+      </section>
+
+      <section id="periodicTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">ELEMENT EXPLORER</span><h2>Interactive periodic table</h2><p>Select an element to inspect its properties, then use it as the central or bonded atom in your molecular model.</p></div>
+        <div class="periodic-tools"><input id="elementSearch" type="search" placeholder="Search element, symbol, or atomic number…" aria-label="Cari unsur"><span id="elementCount">118 elements</span></div>
+        <div id="periodicGrid" class="periodic-grid" aria-label="Tabel periodik unsur"></div>
+        <div class="element-detail" id="elementDetail"><div class="element-tile-preview"><span id="detailNumber">6</span><strong id="detailSymbol">C</strong><small id="detailName">Carbon</small></div><div class="element-facts"><span class="eyebrow">SELECTED ELEMENT</span><h3 id="detailTitle">Carbon (C)</h3><div class="element-fact-grid"><div><small>Atomic number</small><b id="detailAtomic">6</b></div><div><small>Relative atomic mass</small><b id="detailMass">12.011</b></div><div><small>Group / Period</small><b id="detailPosition">14 / 2</b></div><div><small>Valence electrons</small><b id="detailValence">4</b></div><div><small>Category</small><b id="detailCategory">Nonmetal</b></div><div><small>Electron shells</small><b id="detailShells">2, 4</b></div></div><div class="element-actions"><button id="useElementBtn" class="btn btn-primary">Use as central atom →</button><button id="useBondElementBtn" class="btn btn-quiet">Use as bonded atom</button></div></div></div>
+        <p class="periodic-note">Catatan: jumlah elektron valensi ditampilkan sebagai pendekatan untuk unsur golongan utama. Unsur transisi dapat memiliki perilaku ikatan yang lebih kompleks. Model VSEPR di halaman ini adalah simulasi pengantar, bukan prediksi semua senyawa nyata.</p>
+      </section>
+
+      <section id="moleculesTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">EXPLORE EXAMPLES</span><h2>Real molecule library</h2><p>Select a molecule to load its electron-group arrangement into the simulator.</p></div>
+        <div class="molecule-grid" id="moleculeGrid"></div>
+      </section>
+
+
+      <section id="bondingTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">CHEMICAL BONDING / IKATAN KIMIA</span><h2>Explore chemical bonds</h2><p>Pelajari bagaimana atom berikatan melalui perpindahan atau pemakaian bersama elektron.</p></div>
+        <div class="bond-type-grid">
+          <button class="bond-type-card active" data-bondtype="ionic"><span class="bond-type-symbol">Na⁺ · Cl⁻</span><b>Ikatan ion</b><small>Serah terima elektron</small></button>
+          <button class="bond-type-card" data-bondtype="covalent"><span class="bond-type-symbol">H — H</span><b>Ikatan kovalen</b><small>Pemakaian bersama elektron</small></button>
+          <button class="bond-type-card" data-bondtype="coordinate"><span class="bond-type-symbol">N → H⁺</span><b>Kovalen koordinasi</b><small>Pasangan elektron dari satu atom</small></button>
+        </div>
+        <div class="bond-workspace">
+          <div class="bond-visual-card"><div class="info-head"><span class="eyebrow">ELECTRON INTERACTION</span><span class="analysis-chip">INTERACTIVE MODEL</span></div><div id="bondVisual" class="bond-visual" aria-live="polite"></div><div class="bond-controls"><label for="bondExample">PILIH CONTOH</label><select id="bondExample"></select></div></div>
+          <div class="bond-explain-card"><span class="eyebrow">LEARN THE CONCEPT</span><h2 id="bondTitle">Ikatan ion</h2><p id="bondDescription"></p><div class="bond-facts" id="bondFacts"></div><div class="bond-note" id="bondNote"></div></div>
+        </div>
+        <div class="lesson-strip"><b>Ingat konsepnya</b><span>Ikatan ion: perpindahan elektron.</span><span>Ikatan kovalen: pemakaian bersama pasangan elektron.</span><span>Ikatan kovalen koordinasi: kedua elektron ikatan berasal dari satu atom.</span></div>
+      </section>
+
+      <section id="polarityTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">ELECTRONEGATIVITY / KEPOLARAN</span><h2>Polarity lab</h2><p>Bandingkan keelektronegatifan, arah dipol, dan bentuk molekul untuk memahami kepolaran.</p></div>
+        <div class="polarity-layout">
+          <div class="polarity-card">
+            <div class="info-head"><span class="eyebrow">MOLECULE EXPLORER</span><span class="analysis-chip">LIVE EXAMPLE</span></div>
+            <label class="field-label" for="polarityExample">PILIH MOLEKUL</label><select id="polarityExample" class="wide-select">
+              <option value="HCl">HCl — hidrogen klorida</option><option value="Cl2">Cl₂ — klorin</option><option value="H2O">H₂O — air</option><option value="CO2">CO₂ — karbon dioksida</option><option value="NH3">NH₃ — amonia</option><option value="CH4">CH₄ — metana</option>
+            </select>
+            <div id="polarityDiagram" class="polarity-diagram"></div>
+            <div class="polarity-result"><span>CLASSIFICATION</span><b id="polarityResult">Molekul polar</b><p id="polarityReason"></p></div>
+          </div>
+          <div class="polarity-card theory-panel">
+            <span class="eyebrow">KEY CONCEPTS</span><h3>Bagaimana menentukan kepolaran?</h3>
+            <ol><li><b>Periksa ikatannya.</b> Perbedaan keelektronegatifan menyebabkan distribusi elektron tidak merata dan dapat membentuk dipol ikatan.</li><li><b>Periksa bentuk molekul.</b> Arah setiap dipol ikatan harus diperhitungkan.</li><li><b>Periksa resultannya.</b> Jika resultan momen dipol tidak nol, molekul bersifat polar. Jika saling meniadakan, molekul nonpolar.</li></ol>
+            <div class="bond-note">Catatan: molekul yang memiliki ikatan polar belum tentu merupakan molekul polar. Contohnya CO₂ yang berbentuk linear dan simetris.</div>
+          </div>
+        </div>
+        <div class="polarity-lab-controls"><div><span class="eyebrow">COBA SENDIRI</span><h3>Eksperimen perbedaan elektronegativitas</h3><p>Geser nilai kedua atom untuk melihat perubahan karakter ikatan secara konseptual.</p></div><div class="en-slider"><label for="enA">Atom A: <b id="enAValue">2.1</b></label><input id="enA" type="range" min="0.7" max="4" step="0.1" value="2.1"></div><div class="en-slider"><label for="enB">Atom B: <b id="enBValue">3.0</b></label><input id="enB" type="range" min="0.7" max="4" step="0.1" value="3.0"></div><div class="en-output"><span>ΔEN</span><b id="enDelta">0.9</b><strong id="enCharacter">Kovalen polar</strong><small id="enExplanation">Perbedaan elektronegativitas menunjukkan pembagian elektron yang tidak merata.</small></div></div>
+        <div class="electronegativity-card"><div><span class="eyebrow">ELECTRONEGATIVITY</span><h3>Perbedaan keelektronegatifan (ΔEN)</h3><p>Nilai ΔEN membantu memperkirakan karakter ikatan. Batas kategori dapat berbeda antar buku ajar; gunakan sebagai pedoman, bukan aturan mutlak.</p></div><div class="en-ranges"><div><b>ΔEN kecil</b><span>Kovalen nonpolar / sangat lemah polar</span></div><div><b>ΔEN sedang</b><span>Kovalen polar</span></div><div><b>ΔEN besar</b><span>Karakter ion semakin kuat</span></div></div></div>
+      </section>
+
+      <section id="lewisTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">ELECTRON DOT STRUCTURE</span><h2>Struktur Lewis interaktif</h2><p>Pilih spesies yang sudah diverifikasi untuk melihat pasangan elektron ikatan dan pasangan elektron bebas.</p></div>
+        <div class="lesson-layout"><article class="lesson-card"><label class="field-label" for="lewisExample">PILIH MOLEKUL / ION</label><select id="lewisExample" class="wide-select"></select><div id="lewisCanvas" class="lewis-canvas"></div><div id="lewisSummary" class="lesson-note"></div></article><article class="lesson-card"><h3>Membaca struktur Lewis</h3><div class="key-row"><span class="dot-key bonding-key"></span><span>Pasangan elektron ikatan</span></div><div class="key-row"><span class="dot-key lone-key"></span><span>Pasangan elektron bebas</span></div><p class="lesson-copy">Satu garis ikatan mewakili satu pasangan elektron yang dipakai bersama. Titik-titik di sekitar atom menunjukkan elektron valensi yang tidak digunakan untuk ikatan.</p><div class="lesson-note">Struktur ditampilkan untuk contoh yang umum di SMA. Ion ditandai dengan kurung dan muatan. Struktur resonansi dan pengecualian aturan oktet belum digambar otomatis.</div></article></div>
+      </section>
+      <section id="aufbauTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">ELECTRON CONFIGURATION</span><h2>Konfigurasi elektron — prinsip Aufbau</h2><p>Pilih unsur untuk melihat pengisian orbital, mengikuti urutan energi, aturan Hund, dan larangan Pauli.</p></div>
+        <div class="lesson-layout"><article class="lesson-card"><label class="field-label" for="aufbauElement">PILIH UNSUR (H–Kr)</label><select id="aufbauElement" class="wide-select"></select><div id="aufbauResult" class="aufbau-result"></div></article><article class="lesson-card"><h3>Aturan pengisian elektron</h3><ol class="lesson-list"><li><b>Aufbau:</b> orbital berenergi lebih rendah diisi lebih dahulu.</li><li><b>Pauli:</b> satu orbital maksimal dua elektron dengan spin berlawanan.</li><li><b>Hund:</b> orbital setingkat diisi satu-satu sebelum berpasangan.</li></ol><div class="lesson-note">Catatan: Cr dan Cu memiliki konfigurasi dasar khusus yang ditampilkan sebagai pengecualian. Model ini mencakup unsur H sampai Kr.</div></article></div>
+      </section>
+      <section id="ionsTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">ION FORMATION</span><h2>Bagaimana ion terbentuk?</h2><p>Ikuti perpindahan elektron dari atom netral hingga terbentuk kation dan anion.</p></div>
+        <div class="ion-layout"><article class="lesson-card"><label class="field-label" for="ionExample">PILIH CONTOH</label><select id="ionExample" class="wide-select"><option value="NaCl">NaCl — natrium klorida</option><option value="MgO">MgO — magnesium oksida</option><option value="MgCl2">MgCl₂ — magnesium klorida</option></select><div class="ion-stage" id="ionStage"></div><div class="ion-controls"><button id="ionPrev" class="btn btn-quiet">← Sebelumnya</button><span id="ionStepLabel">Langkah 1 dari 3</span><button id="ionNext" class="btn btn-primary">Berikutnya →</button></div></article><article class="lesson-card"><h3>Konsep penting</h3><p class="lesson-copy">Atom netral memiliki jumlah proton dan elektron yang sama. Ketika elektron berpindah, jumlah proton tidak berubah sehingga atom menjadi ion bermuatan.</p><div class="lesson-note">Logam umumnya melepas elektron menjadi kation (+), sedangkan nonlogam umumnya menerima elektron menjadi anion (−). Senyawa ion secara keseluruhan harus netral.</div></article></div>
+      </section>
+      <section id="anglesTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">VSEPR / BOND ANGLES</span><h2>Sudut ikatan & pasangan elektron</h2><p>Bandingkan geometri elektron, bentuk molekul, jumlah pasangan ikatan, dan pasangan bebas.</p></div>
+        <div class="lesson-layout"><article class="lesson-card"><label class="field-label" for="angleExample">PILIH MOLEKUL</label><select id="angleExample" class="wide-select"></select><div id="angleVisual" class="angle-visual"></div><div class="angle-metrics" id="angleMetrics"></div></article><article class="lesson-card"><h3>Mengapa sudut bisa berubah?</h3><p class="lesson-copy">Pasangan elektron saling tolak-menolak. Pasangan bebas menempati ruang lebih besar dan umumnya menolak lebih kuat daripada pasangan ikatan, sehingga sudut ikatan dapat mengecil.</p><div class="lesson-note">Sudut ideal adalah pendekatan geometri. Nilai aktual dapat dipengaruhi jenis atom, panjang ikatan, dan lingkungan molekul.</div></article></div>
+      </section>
+      <section id="compoundTab" class="tab-panel hidden">
+        <div class="library-intro"><span class="eyebrow">VALIDATED COMPOUND BUILDER</span><h2>Custom senyawa — mode terbimbing</h2><p>Rakit contoh senyawa melalui pilihan yang sudah diperiksa berdasarkan valensi, muatan, dan model geometri yang didukung.</p></div>
+        <div class="lesson-card compound-card"><label class="field-label" for="compoundTemplate">PILIH TEMPLATE SENYAWA</label><select id="compoundTemplate" class="wide-select"></select><div id="compoundDetails" class="compound-details"></div><button id="loadCompound" class="btn btn-primary">Muat ke simulasi yang sesuai →</button><p class="lesson-note">Pembuat senyawa bebas dengan kombinasi unsur sembarang sengaja tidak dibuka. Tidak semua kombinasi atom menghasilkan senyawa stabil atau mengikuti model VSEPR sederhana. Pilihan yang tersedia hanya contoh yang sudah ditentukan dan diperiksa.</p></div>
+      </section>
+      <div class="hidden" aria-hidden="true"><span id="challengeTarget">Trigonal pyramidal</span><span id="challengeFormula">AX₃E</span><span id="challengeFeedback"></span><button id="newChallenge"></button><button id="checkChallenge"></button></div>
+      <section id="quizTab" class="tab-panel hidden">
+        <div class="coming-soon"><span class="coming-icon">✧</span><span class="eyebrow">LEARNING MODULE</span><h2>Kuis interaktif</h2><span class="coming-pill">SEGERA HADIR</span><p>Fitur kuis sedang disiapkan agar penilaian, kunci jawaban, dan pembahasan dapat berfungsi dengan benar. Untuk sementara, bagian ini belum dapat digunakan.</p></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="helpModal" class="modal hidden"><div class="modal-box"><button id="closeHelp" class="modal-close">×</button><span class="eyebrow">QUICK GUIDE</span><h2>How to use Molecule Lab</h2><ol><li>Change the number of bonded atoms and lone pairs.</li><li>Choose a preset or load a real molecule from the library.</li><li>Drag on the 3D stage to rotate the model. Scroll to zoom.</li><li>Use the display toggles to show labels, lone pairs, and bond angles.</li><li>Try Challenge mode to test your understanding of VSEPR theory.</li></ol><button id="gotIt" class="btn btn-primary">Got it</button></div></div>
+  <script src="script.js"></script>
+</body>
+</html>
